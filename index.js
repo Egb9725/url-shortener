@@ -15,6 +15,7 @@ app.get('/', (req, res) => {
 });
 // ----------------stockage des urls------------------------
 let urlData = [];// Variable pour stocker les URLs en mémoire
+
 // ajouter les urls dans le tableau
 app.post('/shorten', async (req, res) => {
   const fullUrl = req.body.fullUrl;
