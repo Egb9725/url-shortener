@@ -1,0 +1,29 @@
+<%- include("./partials/header.ejs",{title:"URL Shortener" }) %>
+<main>
+  <h1>Raccourcisseurs d'URL</h1>
+
+  <form action="/shorten" method="POST">
+    <input type="text" name="fullUrl" placeholder="Entrez l'URL" required>
+    <button type="submit">Raccourcir</button>
+  </form>
+
+  <ul>
+    <% for (let i = 0; i < urls.length; i++) { %>
+      <li>
+        <span>Url longue:</span>
+        <a href="<%= urls[i].full %>" target="_blank"><%= urls[i].full %></a>
+      </li>
+  
+      <li>
+        <span>Url Courte:</spans>
+        <a href="/<%= urls[i].short %>" target="_blank">/<%= urls[i].short %></a>
+      </li>
+  
+      <li>
+        <img src="<%= urls[i].qrCode %>" alt="QR Code">
+      </li>
+    <% } %>
+  </ul>
+</main>
+
+<%- include("./partials/footer.ejs") %>>
