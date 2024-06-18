@@ -5,7 +5,7 @@ const QRCode = require('qrcode');
 const app = express();
 
 
-let urlData = [];// Variable pour stocker les URLs en mémoire
+
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
@@ -13,7 +13,9 @@ app.use(express.urlencoded({ extended: false }));
 app.get('/', (req, res) => {
   res.render('index', { urls: urlData });
 });
-
+// ----------------stockage des urls------------------------
+let urlData = [];// Variable pour stocker les URLs en mémoire
+// ajouter les urls dans le tableau
 app.post('/shorten', async (req, res) => {
   const fullUrl = req.body.fullUrl;
   const shortUrl = shortid.generate();
@@ -23,6 +25,7 @@ app.post('/shorten', async (req, res) => {
   res.redirect('/');
 });
 
+// afficher les urls 
 app.get('/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
   const url = urlData.find(url => url.short === shortUrl);
