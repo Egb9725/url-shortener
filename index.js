@@ -6,6 +6,8 @@ const{body,validationResult} = require("express-validator"); //validation
 
 const app = express();
 
+app.use(express.static('public'));  // Pour servir des fichiers statiques comme JavaScript
+
 function urlValidations(){
   return [
     body('fullUrl').isURL().withMessage('Veuillez entrer une URL valide')
@@ -43,6 +45,14 @@ app.get('/:shortUrl', (req, res) => {
   }
 });
 
+//supprimer les urls
+app.delete('/delete/:shortUrl', (req, res) => {
+  const shortUrl = req.params.shortUrl;
+  urlData = urlData.filter(url => url.short!== shortUrl);
+  res.redirect('/');
+});
+
+
 //modifier les urls
 app.put('/update/:shortUrl', async (req, res) => {
   const shortUrl = req.params.shortUrl;
@@ -58,12 +68,7 @@ app.put('/update/:shortUrl', async (req, res) => {
 
 });
 
-//supprimer les urls
-app.delete('/delete/:shortUrl', (req, res) => {
-  const shortUrl = req.params.shortUrl;
-  urlData = urlData.filter(url => url.short!== shortUrl);
-  res.redirect('/');
-});
+
 
 const port=3000;
 app.listen(port, () => {
