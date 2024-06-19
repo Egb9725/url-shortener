@@ -20,18 +20,27 @@
         <a href="/<%= urls[i].short %>" target="_blank">/<%= urls[i].short %></a>
       </li>
   
-      <li>
-        <img src="<%= urls[i].qrCode %>" alt="QR Code">
-      </li>
+      <img src="<%= urls[i].qrCode %>" alt="QR Code">
+      <br>
+
+      <!-- script pour gerer les requetes DELETE-->
+     
+      <button onclick="deleteUrl('<%= urls[i].short %>')">Supprimer</button>
+     
+       <!-- Lien pour modifier l'URL -->
+       <a href="/edit/<%= urls[i].short %>">Edit</a>
+
+       <!-- Bouton pour télécharger l'URL -->
+       <form action="/download/<%= urls[i].short %>" method="GET" style="display:inline;">
+         <button type="submit">Download</button>
+       </form>
+
     <% } %>
-  </ul>
-  
-    <!-- script pour gerer les requetes DELETE-->
-    <button onclick="deleteUrl('<%= urls[i].short %>')">
-      Supprimer
-    </button>
+  </ul> 
  
 
 </main>
 
-<%- include("./partials/footer.ejs") %>>
+<script src="/js/deleteUrl.js"></script>
+
+<%- include("./partials/footer.ejs") %>

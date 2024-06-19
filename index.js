@@ -53,21 +53,43 @@ app.delete('/delete/:shortUrl', (req, res) => {
 });
 
 
+//afficher le formulaire de modification
+app.get('/edit/:shortUrl', (req, res) => {
+  const shortUrl = req.params.shortUrl;
+  const url = urlData.find(url => url.short === shortUrl);
+  if (url) {
+    res.render('edit', { url });
+  } else {
+    res.sendStatus(404);
+  }
+});
+
 //modifier les urls
-app.put('/update/:shortUrl', async (req, res) => {
+app.post('/update/:shortUrl', async (req, res) => {
   const shortUrl = req.params.shortUrl;
   const fullUrl = req.body.full;
-  const qrCodeUrl = await QRCode.toDataURL(`http://localhost:3000/${shortUrl}`);
   const urlIndex = urlData.findIndex(url => url.short===shortUrl);
 
   if (urlIndex!==-1) {
-    urlData[urlIndex] = { full: fullUrl, short: shortUrl, qrCode: qrCodeUrl };
+    urlData[urlIndex].full = fullUrl;
+    urlData[urlIndex].qrCode = await QRCode.toDataURL(`http://localhost:3000/${shortUrl}`);
   }else{
     res.redirect('/');
   }
 
 });
 
+//downloads les urls
+app.get('/download/:shortUrl', (req, res) => {
+  const shortUrl = req.params.shortUrl;
+  const url = urlData.find(url => url.short === shortUrl);
+  if (url) {
+    res.setHeader('Content-Disposition', `attachment; filename="${shortUrl}.txt"`);
+    res.send(`Full URL: ${url.full}\nShort URL: http://localhost:3000/${shortUrl}\nQR Code URL: ${url.qrCode}`);
+  } else {
+    res.sendStatus(404);
+  }
+});
 
 
 const port=3000;
