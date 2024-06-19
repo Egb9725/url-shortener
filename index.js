@@ -48,10 +48,16 @@ app.get('/:shortUrl', (req, res) => {
 //supprimer les urls
 app.delete('/delete/:shortUrl', (req, res) => {
   const {shortUrl} = req.params;
- 
-  const urlIndex = urlData.findIndex(url => url.short===shortUrl);
-  urlData.splice(urlIndex, 1);
-  res.redirect('/');
+
+  if (urlIndex !== -1) {
+    urlData.splice(urlIndex, 1);
+
+    // Redirection vers la page d'accueil '/'
+    res.redirect('/');
+  } else {
+    // un code d'erreur 404 Not Found
+    res.sendStatus(404);
+  }
 });
 
 
@@ -68,34 +74,15 @@ app.get('/edit/:shortUrl', (req, res) => {
 
 //modifier les urls
 app.post('/update/:shortUrl', async (req, res) => {
-  const shortUrl = req.params.shortUrl;
-  const fullUrl = req.body.full;
-  const urlIndex = urlData.findIndex(url => url.short===shortUrl);
-
-  if (urlIndex!==-1) {
-    urlData[urlIndex].full = fullUrl;
-    urlData[urlIndex].qrCode = await QRCode.toDataURL(`http://localhost:3000/${shortUrl}`);
-  }else{
-    res.redirect('/');
-  }
 
 });
-
-//downloads les urls
-
+//downloads le QR code en image
 app.get('/download/:shortUrl', (req, res) => {
-  const shortUrl = req.params.shortUrl;
-  const url = urlData.find(url => url.short === shortUrl);
-  if (url) {
-    res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Content-Disposition', `attachment; filename="${shortUrl}.png"`);
-    res.send(Buffer.from(url.qrCode.split(',')[1], 'base64'));
-  } else {
-    res.sendStatus(404);
-  }
+  
 });
 
 const port=3000;
+//Lance le serveur
 app.listen(port, () => {
   console.log('Le serveur est lancé sur le port 3000');
   console.log(`http://localhost:${port}`);

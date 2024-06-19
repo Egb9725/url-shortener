@@ -76,7 +76,24 @@ body {
     font-size: 16px;
     margin-bottom: 10px;
   }
-  
+  #telecharge{
+    background-color:transparent;
+    color: #4caf61;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+   
+  }
+  #delete{
+    background-color:transparent;
+    color: #9e0000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+   
+  }
   #rac:hover {
     background-color: #45a049;
   }
@@ -107,25 +124,4 @@ body {
     max-width: 150px;
   }
   
-  /* Styles des boutons de suppression et de modification */
-  .delete,
-  .edit {
-    display: inline-block;
-    margin-right: 10px;
-    background-color: #dc3545;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .edit {
-    background-color: #007bff;
-  }
-  
-  .delete:hover,
-  .edit:hover {
-    opacity: 0.8;
-  }
+

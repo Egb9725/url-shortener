@@ -1,12 +1,11 @@
 <%- include("./partials/header.ejs",{title:"Update URL" }) %>
 
-    <h1>Modifier l'URL</h1>
-    <form action="/update/<%= url.short %>" method="POST">
-        <label for="fullUrl">Nouveau URL:</label>
-        <input type="text" id="fullUrl" name="fullUrl" value="<%= url.full %>" required>
-        <button type="submit">Enregistrer</button>
-    </form>
+<h1>Modifier l'URL</h1>
+<form id="updateForm" data-short-url="<%= url.short %>">
+    <label for="fullUrl">Nouveau URL:</label>
+    <input type="text" id="fullUrl" name="fullUrl" value="<%= url.full %>" required>
+    <button type="submit">Enregistrer</button>
+</form>
 
-    <script src="/views/edit.ejs"></script>
 
 <%- include("./partials/footer.ejs") %>
