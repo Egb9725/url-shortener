@@ -25,6 +25,13 @@
       </li>
     <% } %>
   </ul>
+  
+    <!-- script pour gerer les requetes DELETE-->
+    <button onclick="deleteUrl('<%= urls[i].short %>')">
+      Supprimer
+    </button>
+ 
+
 </main>
 
 <%- include("./partials/footer.ejs") %>>

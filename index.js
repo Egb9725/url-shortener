@@ -2,10 +2,15 @@ const express = require('express');
 const shortid = require('shortid');
 const QRCode = require('qrcode');
 
+const{body,validationResult} = require("express-validator"); //validation 
+
 const app = express();
 
-
-
+function urlValidations(){
+  return [
+    body('fullUrl').isURL().withMessage('Veuillez entrer une URL valide')
+  ]
+}
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
@@ -13,8 +18,10 @@ app.use(express.urlencoded({ extended: false }));
 app.get('/', (req, res) => {
   res.render('index', { urls: urlData });
 });
+
 // ----------------stockage des urls------------------------
 let urlData = [];// Variable pour stocker les URLs en mémoire
+
 // ajouter les urls dans le tableau
 app.post('/shorten', async (req, res) => {
   const fullUrl = req.body.fullUrl;
@@ -34,6 +41,28 @@ app.get('/:shortUrl', (req, res) => {
   } else {
     res.sendStatus(404);
   }
+});
+
+//modifier les urls
+app.put('/update/:shortUrl', async (req, res) => {
+  const shortUrl = req.params.shortUrl;
+  const fullUrl = req.body.full;
+  const qrCodeUrl = await QRCode.toDataURL(`http://localhost:3000/${shortUrl}`);
+  const urlIndex = urlData.findIndex(url => url.short===shortUrl);
+
+  if (urlIndex!==-1) {
+    urlData[urlIndex] = { full: fullUrl, short: shortUrl, qrCode: qrCodeUrl };
+  }else{
+    res.redirect('/');
+  }
+
+});
+
+//supprimer les urls
+app.delete('/delete/:shortUrl', (req, res) => {
+  const shortUrl = req.params.shortUrl;
+  urlData = urlData.filter(url => url.short!== shortUrl);
+  res.redirect('/');
 });
 
 const port=3000;
