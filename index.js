@@ -82,17 +82,18 @@ app.post('/update/:shortUrl', async (req, res) => {
 });
 
 //downloads les urls
+
 app.get('/download/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
   const url = urlData.find(url => url.short === shortUrl);
   if (url) {
-    res.setHeader('Content-Disposition', `attachment; filename="${shortUrl}.txt"`);
-    res.send(`Full URL: ${url.full}\nShort URL: http://localhost:3000/${shortUrl}\nQR Code URL: ${url.qrCode}`);
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Disposition', `attachment; filename="${shortUrl}.png"`);
+    res.send(Buffer.from(url.qrCode.split(',')[1], 'base64'));
   } else {
     res.sendStatus(404);
   }
 });
-
 
 const port=3000;
 app.listen(port, () => {

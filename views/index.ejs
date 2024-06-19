@@ -5,7 +5,6 @@
   <form action="/shorten" method="POST">
     <input type="text" name="fullUrl" placeholder="Entrez l'URL" required>
     <button type="submit">Raccourcir</button>
-    <button type="submit">Supprimer les liens</button>
   </form>
   
   <!-- afficher les URLs stockées -->
@@ -32,9 +31,10 @@
        <a href="/edit/update/<%= urls[i].short %>">Modifier</a>
 
        <!-- Bouton pour télécharger l'URL -->
-       <form action="/download/<%= urls[i].short %>" method="GET" style="display:inline;">
-         <button type="submit">Télécharger</button>
-       </form>
+      <!-- Bouton pour télécharger l'URL -->
+      <form action="/download/<%= urls[i].short %>" method="GET" style="display:inline;">
+        <button type="submit">Télécharger QR Code</button>
+      </form>
 
     <% } %>
   </ul> 
