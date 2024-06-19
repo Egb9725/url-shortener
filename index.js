@@ -47,8 +47,10 @@ app.get('/:shortUrl', (req, res) => {
 
 //supprimer les urls
 app.delete('/delete/:shortUrl', (req, res) => {
-  const shortUrl = req.params.shortUrl;
-  urlData = urlData.filter(url => url.short!== shortUrl);
+  const {shortUrl} = req.params;
+ 
+  const urlIndex = urlData.findIndex(url => url.short===shortUrl);
+  urlData.splice(urlIndex, 1);
   res.redirect('/');
 });
 
