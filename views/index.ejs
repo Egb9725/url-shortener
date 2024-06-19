@@ -12,20 +12,36 @@
   <ul>
     <% for (let i = 0; i < urls.length; i++) { %>
       <li>
-        <span>Url longue:</span>
+        <span>Url long:</span>
         <a href="<%= urls[i].full %>" target="_blank"><%= urls[i].full %></a>
       </li>
   
       <li>
-        <span>Url Courte:</spans>
+        <span>Url Court:</spans>
         <a href="/<%= urls[i].short %>" target="_blank">/<%= urls[i].short %></a>
       </li>
   
-      <li>
-        <img src="<%= urls[i].qrCode %>" alt="QR Code">
-      </li>
+      <img src="<%= urls[i].qrCode %>" alt="QR Code">
+      <br>
+
+      <!-- script pour gerer les requetes DELETE-->
+     
+      <button id="delete" name="<%= urls[i].short %>" type="submit">Supprimer</button>
+     
+       <!-- Lien pour modifier l'URL -->
+       <a href="/edit/update/<%= urls[i].short %>">Modifier</a>
+
+       <!-- Bouton pour télécharger l'URL -->
+       <form action="/download/<%= urls[i].short %>" method="GET" style="display:inline;">
+         <button type="submit">Télécharger</button>
+       </form>
+
     <% } %>
-  </ul>
+  </ul> 
+ 
+
 </main>
 
-<%- include("./partials/footer.ejs") %>>
+<script src="/js/deleteUrl.js"></script>
+
+<%- include("./partials/footer.ejs") %>
