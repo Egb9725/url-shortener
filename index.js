@@ -1,46 +1,45 @@
+/*------Importation des modules------ */
 const express = require('express');
 const shortid = require('shortid');
 const QRCode = require('qrcode');
-
-const{body,validationResult} = require("express-validator"); //validation 
+const { body, validationResult } = require('express-validator');
 const fs = require('fs');
 
-
+/*------configuration d'express------ */
 const app = express();
+const port = 3000;
 
-
-app.use(express.static('public'));  // Pour servir des fichiers statiques comme JavaScript
-app.set('view engine', 'ejs');
+app.use(express.static('public'));  // Pour servir des fichiers statiques
+app.set('view engine', 'ejs');      // Moteur de template EJS
 app.use(express.urlencoded({ extended: false }));
 
-
-function urlValidations(){
+// Fonction de validation des URLs
+function urlValidations() {
   return [
     body('fullUrl').isURL().withMessage('Veuillez entrer une URL valide'),
     body('shortUrl').notEmpty().withMessage('Short URL cannot be empty.'),
-  ]
+  ];
 }
 
+// Stockage des URLs
+let urlData = [];
 
-
+// Afficher les URLs raccourcies
 app.get('/', (req, res) => {
   res.render('index', { urls: urlData });
 });
 
-// ----------------stockage des urls------------------------
-let urlData = [];// Variable pour stocker les URLs en mémoire
-
-// ajouter les urls dans le tableau
+// Ajouter une nouvelle URL raccourcie
 app.post('/shorten', async (req, res) => {
   const fullUrl = req.body.fullUrl;
   const shortUrl = shortid.generate();
-  const qrCodeUrl = await QRCode.toDataURL(`http://localhost:3000/${shortUrl}`);
+  const qrCodeUrl = await QRCode.toDataURL(`http://localhost:${port}/${shortUrl}`);
 
   urlData.push({ full: fullUrl, short: shortUrl, qrCode: qrCodeUrl });
   res.redirect('/');
 });
 
-// afficher les urls 
+// Redirection vers l'URL originale depuis l'URL raccourcie
 app.get('/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
   const url = urlData.find(url => url.short === shortUrl);
@@ -51,34 +50,14 @@ app.get('/:shortUrl', (req, res) => {
   }
 });
 
-//supprimer les urls
-/*app.delete('/delete/:shortUrl', (req, res) => {
-  const shortUrl = req.params.shortUrl;
-
-  if (urlIndex !== -1) {
-    urlData.splice(urlIndex, 1);
-
-    // Redirection vers la page d'accueil '/'
-    res.redirect('/');
-  } else {
-    // un code d'erreur 404 Not Found
-    res.sendStatus(404);
-  }
-});*/
-
-//Endpoint pour supprimer une URL courte
+// Supprimer une URL raccourcie
 app.delete('/delete/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
-
-  // Filtrer les données pour retirer l'URL correspondante
   urlData = urlData.filter(url => url.short !== shortUrl);
-
-  // Envoyer une réponse indiquant que la suppression a réussi
   res.sendStatus(200);
 });
 
-
-//afficher le formulaire de modification
+// Afficher le formulaire d'édition pour une URL raccourcie
 app.get('/edit/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
   const urlEntry = urlData.find(url => url.short === shortUrl);
@@ -89,34 +68,26 @@ app.get('/edit/:shortUrl', (req, res) => {
   }
 });
 
-// Mettre à jour une URL courte
+// Mettre à jour une URL raccourcie
 app.post('/update/:shortUrl', async (req, res) => {
-  
   const oldShortUrl = req.params.shortUrl;
   const fullUrl = req.body.fullUrl;
   const newShortUrl = req.body.shortUrl;
 
-
-  // Trouver l'index de l'URL à mettre à jour
   const urlIndex = urlData.findIndex(url => url.short === oldShortUrl);
   if (urlIndex !== -1) {
-
-    // Générer le QR code pour la nouvelle URL courte
-    const qrCodeUrl = await QRCode.toDataURL(`http://localhost:3000/${newShortUrl}`); 
-    
-    // Mettre à jour l'URL dans urlData
+    const qrCodeUrl = await QRCode.toDataURL(`http://localhost:${port}/${newShortUrl}`);
     urlData[urlIndex] = { full: fullUrl, short: newShortUrl, qrCode: qrCodeUrl };
   }
   res.redirect('/');
 });
 
-//downloads le QR code en image
+// Téléchargement du QR code en image
 app.get('/download/:shortUrl', (req, res) => {
-  
+  // À implémenter
 });
 
-const port=3000;
-//Lance le serveur
+// Démarrage du serveur
 app.listen(port, () => {
   console.log('Le serveur est lancé sur le port 3000');
   console.log(`http://localhost:${port}`);
