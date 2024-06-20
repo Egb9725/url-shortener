@@ -1,17 +1,31 @@
 
-  const deleteButton=document.getElementById('delete');
-  deleteButton.addEventListener('click', async (event) => {
-    try {
-        const response = await fetch(`/delete/${shortUrl}`, {
-          method: 'DELETE',
-        });
-    
-        if (response.ok) {
-          document.getElementById(`url-${shortUrl}`).remove();
-        } else {
-          console.error('erreur de la suppression');
-        }
-      } catch (error) {
-        console.error('Error:', error);
+async function deleteUrl(shortUrl){
+
+const confirmation=confirm('Voulez-vous supprimer cet url?');
+
+if (!confirmation) return;
+  try {
+      // Construire l'URL complète pour la suppression
+      const url = `/delete/${shortUrl}`;
+
+      // Envoyer une requête DELETE à l'URL spécifiée
+      const response = await fetch(url, {
+          method: 'DELETE'
+      });
+
+      // Vérifier si la requête a réussi (statut 200 à 299)
+      if (response.ok) {
+          console.log('Suppression réussie');
+      } else {
+          console.error('La suppression a échoué');
       }
-  });
+  } catch (error) {
+      console.error('Erreur lors de la suppression : ', error);
+  }
+
+}
+
+
+
+
+
