@@ -16,6 +16,8 @@ if (!confirmation) return;
       // Vérifier si la requête a réussi (statut 200 à 299)
       if (response.ok) {
           console.log('Suppression réussie');
+           
+          window.location.reload(); // Rafraîchit la page actuelle
       } else {
           console.error('La suppression a échoué');
       }
